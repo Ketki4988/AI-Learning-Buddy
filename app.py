@@ -1,19 +1,20 @@
 import streamlit as st
-# import google.generativeai as genai
 from google import genai
 
-# Configure Gemini API
-genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
-
-model = genai.GenerativeModel("gemini-flash-latest")
-
+# Configure Streamlit page
 st.set_page_config(
-    page_title="AI Learning Buddy Ketki",
+    page_title="🎓 AI Learning Buddy Ketki",
     page_icon="🎓"
 )
 
 st.title("🎓 AI Learning Buddy Ketki")
 
+# Create Gemini client
+client = genai.Client(
+    api_key=st.secrets["GOOGLE_API_KEY"]
+)
+
+# User Input
 topic = st.text_input("Enter a Topic")
 
 option = st.selectbox(
@@ -28,23 +29,46 @@ option = st.selectbox(
 
 if st.button("Generate"):
 
-    if topic == "":
+    if topic.strip() == "":
         st.warning("Please enter a topic.")
 
     else:
 
         if option == "Explain Concept":
-            prompt = f"Explain {topic} in simple language for a beginner."
+            prompt = f"""
+            Explain {topic} in simple language suitable for a beginner.
+            Use easy words and a real-life example.
+            """
 
         elif option == "Real-Life Example":
-            prompt = f"Give one simple real-life example of {topic}."
+            prompt = f"""
+            Give one simple real-life example to explain {topic}.
+            """
 
         elif option == "Generate Quiz":
-            prompt = f"Create 5 MCQs on {topic} with answers."
+            prompt = f"""
+            Create 5 multiple-choice questions on {topic}.
+
+            Each question should have:
+            - Four options (A, B, C, D)
+            - Correct answer
+            - Short explanation
+            """
 
         else:
             prompt = topic
 
-        response = model.generate_content(prompt)
+        try:
 
-        st.write(response.text)
+            response = client.models.generate_content(
+                model="gemini-flash-latest",
+                contents=prompt
+            )
+
+            st.success("Response Generated Successfully!")
+
+            st.write(response.text)
+
+        except Exception as e:
+
+            st.error(f"Error: {e}")
