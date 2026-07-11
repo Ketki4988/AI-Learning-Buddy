@@ -2,9 +2,9 @@ import streamlit as st
 import google.generativeai as genai
 
 # Configure Gemini API
-genai.configure(api_key="AQ.Ab8RN6IVgG2lmYoOMiqXTACTu5AJRcYRPwPh-45E9We2Ffxb4Q")
+genai.configure(api_key="AQ.Ab8RN6K3Dop-qMILvVlgoXIFqdeJDkDgpDi1qV9Sz9LOuoB3Eg")
 
-model = genai.GenerativeModel("gemini-2.5-flash")
+model = genai.GenerativeModel("gemini-flash-latest")
 
 st.set_page_config(
     page_title="AI Learning Buddy Ketki",
